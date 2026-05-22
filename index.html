@@ -15,13 +15,14 @@
       width: 100%;
       height: 100%;
       background-color: #eee;
-      overflow: hidden; /* Mencegah scroll ganda di browser */
+      overflow: hidden;
     }
 
     .iframe-container {
       width: 100%;
-      height: 100dvh; /* Sangat baik untuk mobile browser */
+      height: 100dvh;
       overflow: hidden;
+      position: relative;
     }
 
     iframe {
@@ -30,22 +31,108 @@
       height: 100%;
       border: none;
     }
+
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #666;
+      font-family: Arial, sans-serif;
+    }
+
+    .error {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #d32f2f;
+      font-family: Arial, sans-serif;
+      background: #ffebee;
+      padding: 30px;
+      border-radius: 8px;
+      max-width: 500px;
+    }
+
+    .error a {
+      color: #1976d2;
+      text-decoration: none;
+    }
+
+    .error a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
 
-  <div class="iframe-container">
+  <div class="iframe-container" id="container">
+    <div class="loading">
+      <p>Memuat aplikasi...</p>
+    </div>
     <iframe
       id="app"
       src="https://script.google.com/macros/s/AKfycbwTXDg7Rc2E3t8PqO0MOOB83PMwP6Me6ybjzP-iZlM-yoJoC384K6v2JtMEzmzhZp0X/exec"
       scrolling="yes"
       allowfullscreen="true"
       loading="lazy"
-      /* OPTIMASI: Menambahkan hak akses sandbox agar fitur web app (form/submit/script) bekerja sempurna */
-      sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin allow-popups allow-modals"
-      allow="fullscreen; camera; microphone; display-capture; geolocation;">
+      sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-presentation"
+      allow="fullscreen; camera; microphone; display-capture; geolocation;"
+      style="display: none;">
     </iframe>
   </div>
+
+  <script>
+    // Handle iframe loading
+    const iframe = document.getElementById('app');
+    const container = document.getElementById('container');
+
+    iframe.addEventListener('load', function() {
+      console.log('Iframe berhasil dimuat');
+      // Remove loading indicator
+      const loading = container.querySelector('.loading');
+      if (loading) loading.remove();
+      iframe.style.display = 'block';
+    });
+
+    iframe.addEventListener('error', function() {
+      console.error('Error loading iframe');
+      const loading = container.querySelector('.loading');
+      if (loading) {
+        loading.innerHTML = `
+          <div class="error">
+            <h3>Gagal Memuat Aplikasi</h3>
+            <p>Silakan coba buka langsung dari link berikut:</p>
+            <a href="https://script.google.com/macros/s/AKfycbwTXDg7Rc2E3t8PqO0MOOB83PMwP6Me6ybjzP-iZlM-yoJoC384K6v2JtMEzmzhZp0X/exec" target="_blank">
+              Buka Aplikasi Tukaran-Lembur
+            </a>
+          </div>
+        `;
+      }
+    });
+
+    // Timeout fallback (15 detik)
+    setTimeout(function() {
+      if (iframe.style.display === 'none') {
+        const loading = container.querySelector('.loading');
+        if (loading) {
+          loading.innerHTML = `
+            <div class="error">
+              <h3>Koneksi Lambat</h3>
+              <p>Aplikasi membutuhkan waktu lebih lama untuk dimuat.</p>
+              <p>Silakan coba:</p>
+              <ul style="text-align: left; display: inline-block;">
+                <li>Refresh halaman (F5)</li>
+                <li><a href="https://script.google.com/macros/s/AKfycbwTXDg7Rc2E3t8PqO0MOOB83PMwP6Me6ybjzP-iZlM-yoJoC384K6v2JtMEzmzhZp0X/exec" target="_blank">Buka langsung dari Google</a></li>
+              </ul>
+            </div>
+          `;
+        }
+      }
+    }, 15000);
+  </script>
 
 </body>
 </html>
