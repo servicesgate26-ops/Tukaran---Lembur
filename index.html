@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TUKARAN - LEMBUR</title>
+  
+  <!-- OPTIMASI: Menggunakan link direct download agar favicon Google Drive muncul -->
+  <link rel="icon" href="https://lh3.googleusercontent.com/d/1BvaivHWfQlWEH1cFfITYN5xeAOg-HZUh" />
+  
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #eee;
+      overflow: hidden; /* Mencegah scroll ganda di browser */
+    }
+
+    .iframe-container {
+      width: 100%;
+      height: 100dvh; /* Sangat baik untuk mobile browser */
+      overflow: hidden;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="iframe-container">
+    <iframe
+      id="app"
+      src="https://script.google.com/macros/s/AKfycbwTXDg7Rc2E3t8PqO0MOOB83PMwP6Me6ybjzP-iZlM-yoJoC384K6v2JtMEzmzhZp0X/exec"
+      scrolling="yes"
+      allowfullscreen="true"
+      loading="lazy"
+      /* OPTIMASI: Menambahkan hak akses sandbox agar fitur web app (form/submit/script) bekerja sempurna */
+      sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin allow-popups allow-modals"
+      allow="fullscreen; camera; microphone; display-capture; geolocation;">
+    </iframe>
+  </div>
+
+</body>
+</html>
