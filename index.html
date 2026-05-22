@@ -28,21 +28,21 @@
     
     iframe {
       width: 100%;
-      height: 100%;
+      height: calc(100% + 55px);
       border: none;
       display: block;
       position: absolute;
-      top: 0;
+      top: -55px;
       left: 0;
     }
 
-    /* Overlay untuk memblokir banner */
+    /* Overlay tipis untuk banner saja */
     .banner-blocker {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 150px;
+      height: 55px;
       background: white;
       z-index: 9999;
       pointer-events: none;
@@ -60,52 +60,6 @@
     allow="fullscreen; camera; microphone; display-capture; geolocation;">
   </iframe>
 </div>
-
-<script>
-  // Scroll iframe ke atas untuk menyembunyikan banner
-  window.addEventListener('load', function() {
-    setTimeout(function() {
-      const iframe = document.getElementById('myiframe');
-      if (iframe && iframe.contentWindow) {
-        try {
-          iframe.contentWindow.scrollTo(0, -150);
-          iframe.contentWindow.document.documentElement.style.marginTop = '-150px';
-          iframe.contentWindow.document.body.style.marginTop = '-150px';
-        } catch(e) {
-          console.log('Cannot manipulate iframe content (CORS)', e);
-        }
-      }
-    }, 500);
-  });
-
-  // Inject CSS ke dalam iframe untuk menyembunyikan banner jika memungkinkan
-  window.addEventListener('load', function() {
-    setTimeout(function() {
-      const iframe = document.getElementById('myiframe');
-      if (iframe && iframe.contentWindow && iframe.contentDocument) {
-        try {
-          const style = iframe.contentDocument.createElement('style');
-          style.textContent = `
-            /* Sembunyikan banner Google Apps Script */
-            div[role="banner"], 
-            [aria-label*="Google Apps Script"],
-            .goog-inline-block:first-child {
-              display: none !important;
-            }
-            
-            body, html {
-              margin-top: -150px !important;
-              padding-top: 0 !important;
-            }
-          `;
-          iframe.contentDocument.head.appendChild(style);
-        } catch(e) {
-          console.log('Cannot inject CSS to iframe (CORS)', e);
-        }
-      }
-    }, 1000);
-  });
-</script>
 
 </body>
 </html>
