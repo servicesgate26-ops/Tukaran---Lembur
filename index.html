@@ -34,23 +34,78 @@
       position: absolute;
       top: 0;
       left: 0;
-      /* Gunakan clip-path untuk memotong bagian atas */
-      clip-path: polygon(0 80px, 100% 80px, 100% 100%, 0 100%);
-      /* Geser ke atas untuk kompensasi */
-      transform: translateY(-80px);
-      height: calc(100% + 80px);
+    }
+
+    /* Overlay untuk memblokir banner */
+    .banner-blocker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 150px;
+      background: white;
+      z-index: 9999;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
 <div class="iframe-wrapper">
+  <div class="banner-blocker"></div>
   <iframe
+    id="myiframe"
     src="https://script.google.com/macros/s/AKfycbwTXDg7Rc2E3t8PqO0MOOB83PMwP6Me6ybjzP-iZlM-yoJoC384K6v2JtMEzmzhZp0X/exec"
     sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-presentation"
     allow="fullscreen; camera; microphone; display-capture; geolocation;">
   </iframe>
 </div>
+
+<script>
+  // Scroll iframe ke atas untuk menyembunyikan banner
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      const iframe = document.getElementById('myiframe');
+      if (iframe && iframe.contentWindow) {
+        try {
+          iframe.contentWindow.scrollTo(0, -150);
+          iframe.contentWindow.document.documentElement.style.marginTop = '-150px';
+          iframe.contentWindow.document.body.style.marginTop = '-150px';
+        } catch(e) {
+          console.log('Cannot manipulate iframe content (CORS)', e);
+        }
+      }
+    }, 500);
+  });
+
+  // Inject CSS ke dalam iframe untuk menyembunyikan banner jika memungkinkan
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      const iframe = document.getElementById('myiframe');
+      if (iframe && iframe.contentWindow && iframe.contentDocument) {
+        try {
+          const style = iframe.contentDocument.createElement('style');
+          style.textContent = `
+            /* Sembunyikan banner Google Apps Script */
+            div[role="banner"], 
+            [aria-label*="Google Apps Script"],
+            .goog-inline-block:first-child {
+              display: none !important;
+            }
+            
+            body, html {
+              margin-top: -150px !important;
+              padding-top: 0 !important;
+            }
+          `;
+          iframe.contentDocument.head.appendChild(style);
+        } catch(e) {
+          console.log('Cannot inject CSS to iframe (CORS)', e);
+        }
+      }
+    }, 1000);
+  });
+</script>
 
 </body>
 </html>
