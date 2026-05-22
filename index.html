@@ -23,16 +23,22 @@
       height: 100%;
       position: relative;
       overflow: hidden;
+      background: white;
     }
     
     iframe {
       width: 100%;
-      height: calc(100% + 150px);
+      height: 100%;
       border: none;
-      position: absolute;
-      top: -120px;
-      left: 0;
       display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      /* Gunakan clip-path untuk memotong bagian atas */
+      clip-path: polygon(0 80px, 100% 80px, 100% 100%, 0 100%);
+      /* Geser ke atas untuk kompensasi */
+      transform: translateY(-80px);
+      height: calc(100% + 80px);
     }
   </style>
 </head>
