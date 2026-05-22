@@ -5,29 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tukaran - Lembur</title>
   <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      background: #eee;
-    }
-    .iframe-container {
       width: 100%;
-      height: calc(100dvh - 65px);   /* ← Sesuaikan */
-      margin-top: 65px;               /* ← Sesuaikan */
+      height: 100%;
       overflow: hidden;
     }
+
+    .iframe-container {
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
     iframe {
+      display: block;
       width: 100%;
       height: 100%;
       border: none;
-      display: block;
     }
   </style>
 </head>
 <body>
-  <!-- Banner kamu di sini (jika ada) -->
-  
+
   <div class="iframe-container">
     <iframe
       src="https://script.google.com/macros/s/AKfycbwTXDg7Rc2E3t8PqO0MOOB83PMwP6Me6ybjzP-iZlM-yoJoC384K6v2JtMEzmzhZp0X/exec"
@@ -35,5 +40,6 @@
       allowfullscreen>
     </iframe>
   </div>
+
 </body>
 </html>
