@@ -5,54 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TUKARAN - LEMBUR</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
       background: white;
     }
-    
+
     .iframe-wrapper {
       width: 100%;
+      /* Sembunyikan area banner di atas dengan clip */
       height: 100%;
       position: relative;
       overflow: hidden;
-      background: white;
-    }
-    
-    iframe {
-      width: 100%;
-      height: calc(100% + 20px);
-      border: none;
-      display: block;
-      position: absolute;
-      top: -20px;
-      left: 0;
     }
 
-    /* Overlay tipis untuk banner saja */
+    iframe {
+      width: 100%;
+      border: none;
+      position: absolute;
+      left: 0;
+      /* Nilai ini dikontrol JS secara dinamis */
+    }
+
     .banner-blocker {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 20px;
       background: white;
       z-index: 9999;
-      pointer-events: none;
+      pointer-events: all;
+      cursor: default;
     }
   </style>
 </head>
 <body>
-
 <div class="iframe-wrapper">
-  <div class="banner-blocker"></div>
+  <div class="banner-blocker" id="blocker"></div>
   <iframe
     id="myiframe"
     src="https://script.google.com/macros/s/AKfycbwTXDg7Rc2E3t8PqO0MOOB83PMwP6Me6ybjzP-iZlM-yoJoC384K6v2JtMEzmzhZp0X/exec"
@@ -61,5 +53,22 @@
   </iframe>
 </div>
 
+<script>
+  // Coba beberapa nilai banner height, sesuaikan jika masih kurang pas
+  const BANNER_HEIGHT = 32; // px — ubah ke 40, 45, atau 30 jika perlu
+
+  function adjustLayout() {
+    const iframe  = document.getElementById('myiframe');
+    const blocker = document.getElementById('blocker');
+
+    blocker.style.height = BANNER_HEIGHT + 'px';
+
+    iframe.style.top    = `-${BANNER_HEIGHT}px`;
+    iframe.style.height = `calc(100vh + ${BANNER_HEIGHT}px)`;
+  }
+
+  adjustLayout();
+  window.addEventListener('resize', adjustLayout);
+</script>
 </body>
 </html>
