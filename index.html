@@ -16,8 +16,8 @@
 
     .iframe-wrapper {
       width: 100%;
-      /* Sembunyikan area banner di atas dengan clip */
-      height: 100%;
+      /* Menggunakan tinggi dinamis berbasis viewport mobile yang akurat */
+      height: calc(var(--vh, 1vh) * 100);
       position: relative;
       overflow: hidden;
     }
@@ -27,7 +27,8 @@
       border: none;
       position: absolute;
       left: 0;
-      /* Nilai ini dikontrol JS secara dinamis */
+      /* Transisi halus saat orientasi layar berubah */
+      transition: top 0.1s ease, height 0.1s ease;
     }
 
     .banner-blocker {
@@ -43,32 +44,48 @@
   </style>
 </head>
 <body>
+
 <div class="iframe-wrapper">
   <div class="banner-blocker" id="blocker"></div>
   <iframe
     id="myiframe"
     src="https://script.google.com/macros/s/AKfycbwTXDg7Rc2E3t8PqO0MOOB83PMwP6Me6ybjzP-iZlM-yoJoC384K6v2JtMEzmzhZp0X/exec"
-    sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-presentation"
+    /* Ditambahkan allow-downloads agar sistem download cetak PDF bekerja sempurna */
+    sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-presentation allow-downloads"
     allow="fullscreen; camera; microphone; display-capture; geolocation;">
   </iframe>
 </div>
 
 <script>
-  // Coba beberapa nilai banner height, sesuaikan jika masih kurang pas
-  const BANNER_HEIGHT = 68; // naik dari 60 ke 75
+  // Ukuran tinggi banner Google Script default (biasanya berkisar 65px - 75px)
+  // Jika teks atau garis pembatas atas masih mengintip, naikkan ke 70 atau 75
+  const BANNER_HEIGHT = 68; 
 
   function adjustLayout() {
+    // 1. Hitung ulang 1% dari tinggi jendela nyata (mengatasi bug address bar mobile browser)
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+
     const iframe  = document.getElementById('myiframe');
     const blocker = document.getElementById('blocker');
 
+    // 2. Terapkan tinggi blocker putih di atas
     blocker.style.height = BANNER_HEIGHT + 'px';
 
-    iframe.style.top    = `-${BANNER_HEIGHT}px`;
-    iframe.style.height = `calc(100vh + ${BANNER_HEIGHT}px)`;
+    // 3. Tarik iframe ke atas sejauh BANNER_HEIGHT untuk menyembunyikan banner Google
+    iframe.style.top = `-${BANNER_HEIGHT}px`;
+    
+    // 4. Tambahkan tinggi iframe agar bagian bawah tidak ikut terpotong
+    let totalHeight = window.innerHeight + BANNER_HEIGHT;
+    iframe.style.height = totalHeight + 'px';
   }
 
+  // Eksekusi saat pertama kali dimuat
   adjustLayout();
+
+  // Dengarkan perubahan ukuran layar (termasuk rotasi HP)
   window.addEventListener('resize', adjustLayout);
+  window.addEventListener('orientationchange', adjustLayout);
 </script>
 </body>
 </html>
